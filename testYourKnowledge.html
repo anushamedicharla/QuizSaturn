@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html ng-app="satQuiz"> <!-- declaring this html as a part of the angular variable so we have the html activated
+							 as an application inside of the angular  -->
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Test Your Knowledge: Saturn</title>
+		<link rel="stylesheet" type="text/css" href="css/saturnQuiz.css">
+	</head>
+	<body>
+	<div id="satQuiz" ng-controller="SQuizControl">
+		<h1>Test Your Knowledge: <span>Saturn</span></h1>
+
+		<div class="progress">
+			<div class=" {{ ($index === activeQuestion) ? 'on' : 'off' }} 
+						 {{ (thisQuestion.questionState === 'answered') ? 'answered' : 'unanswered' }}
+						 {{ (thisQuestion.correctness === 'correct') ? 'correct' : 'incorrect' }} "
+				 ng-repeat="thisQuestion in myQuestions"></div> 
+		</div><!-- progress -->
+		<div class="intro {{ (activeQuestion > -1) ? 'inactive' : 'active' }}">
+			<h2>Welcome</h2>
+			<p>Click begin to test your knowledge of Saturn.</p>
+			<p class="butn" ng-click="activeQuestion = 0">Begin</p>
+		</div><!-- intro -->
+		<div class="question
+					{{ (thisQuestion.questionState === 'answered') ? 'answered' : 'unanswered'}}
+					{{ ($index === activeQuestion) ? 'active' : 'inactive'}}" 
+					ng-repeat="thisQuestion in myQuestions">
+			<p class="que">{{thisQuestion.question}}</p>
+			<p class="ans" 
+				ng-class="{image:Answer.image, selected:isSelected($parent.$index,$index) , correct:isCorrect($parent.$index,$index)}"
+				ng-style="{ 'background-image' : 'url({{Answer.image}})' }"
+				ng-click="clickAnswer($parent.$index,$index)"
+				ng-repeat="Answer in myQuestions[$index].answers">{{ Answer.text }}</p>
+			<div class="feedback">
+				<p ng-show=" {{thisQuestion.correctness === 'correct'}} " >You are <strong>correct</strong></p>
+				<p ng-show=" {{thisQuestion.correctness === 'incorrect'}} " >Uh oh! That is incorrect</p>
+				<p>{{ thisQuestion.feedback }}</p>
+				<div class="butn" ng-click="clickContinue()">
+					Continue
+				</div><!-- feedback -->
+			</div>
+		</div><!-- question -->
+		<div class="results {{ (totalQuestions === activeQuestion) ? 'active' : 'inactive' }} ">
+			<h3>Results</h3>
+			<p>You scored {{percentage}}% by correctly answering {{score}} of the total {{totalQuestions}} questions.</p>
+			<p>Use the links below to challenge your friends.</p>
+			<div class="share" ng-bind-html="createLinks(percentage)">
+				<a href="#" class="butn email">Email</a>
+				<a href="#" class="butn twitter">Tweet</a>
+			</div>
+		</div><!-- results -->
+	</div><!-- myQuiz -->
+		
+	<script type="text/javascript" src="js/angular.min.js"></script>	
+	<script type="text/javascript" src="js/saturnQuiz.js"></script>
+
+	</body>
+</html>
